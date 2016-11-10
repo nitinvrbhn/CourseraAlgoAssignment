@@ -17,15 +17,28 @@ namespace CourseraAlgoSolution
             {
                 fileContent = file.ReadAsArray("quicksort_w2_pq1");
                 file.LogMessage("File read ended..");
-                foreach (string data in fileContent) {
-                    int i;
-                    Int32.TryParse(data, out i);
-                }
+
+                //int[] dataArray = Array.ConvertAll(fileContent, int.Parse);
+
+                int count = QuickSortComparionCount(fileContent.Length);
+
                 file.LogMessage("Process ended..");
+                file.LogMessage("Result is: " + count);
             }
             catch (Exception ex) {
                 file.LogMessage(ex.Message);
             }
+        }
+
+        public static int QuickSortComparionCount(int dataCount) {
+            int sum = 0;
+            if (dataCount == 1 || dataCount == 2) {
+                return dataCount - 1;
+            }
+            sum += QuickSortComparionCount(dataCount / 2);
+            sum += QuickSortComparionCount((dataCount - (dataCount/ 2)));
+            sum += (dataCount - 1);
+            return sum;
         }
     }
 }
