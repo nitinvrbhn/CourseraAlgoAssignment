@@ -74,7 +74,7 @@
             }
         }
         private void StartLog() {
-            using (StreamWriter logFile = File.AppendText(logDirectory + "/" + DateTime.Now.ToString("_yyyy_MM_dd_HH")))
+            using (StreamWriter logFile = File.AppendText(logDirectory + "/log" + DateTime.Now.ToString("_yyyy_MM_dd")))
             {   
                 logFile.WriteLine(Environment.NewLine);
                 logFile.WriteLine("Program run started at: " + DateTime.Now.ToString("hh:mm:ss.ffffff"));
@@ -89,7 +89,7 @@
         public bool LogMessage(string message) {
             try
             {
-                using (StreamWriter logFile = File.AppendText(logDirectory + "/" + DateTime.Now.ToString("_yyyy_MM_dd_HH")))
+                using (StreamWriter logFile = File.AppendText(logDirectory + "/log" + DateTime.Now.ToString("_yyyy_MM_dd")))
                 {
                     logFile.WriteLine(DateTime.Now.ToString("hh:mm:ss.ffffff") + ": " + message);
                 }
