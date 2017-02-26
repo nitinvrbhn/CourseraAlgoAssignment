@@ -17,15 +17,55 @@ namespace CourseraAlgoSolution
             {
                 fileContent = file.ReadAsArray("quicksort_w2_pq1");
                 file.LogMessage("File read ended..");
-                foreach (string data in fileContent) {
-                    int i;
-                    Int32.TryParse(data, out i);
+                List<int[]> dataArray = new List<int[]>();
+                foreach (var d in fileContent)
+                {
+                    dataArray.Add(Array.ConvertAll(d.Split(' '), Int32.Parse));
                 }
-                file.LogMessage("Process ended..");
+                file.LogMessage("Process ended.. " + FloydWarshall(dataArray.ToArray(), dataArray.Count));
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 file.LogMessage(ex.Message);
             }
+        }
+
+        public static int FloydWarshall(int[][] graph, int verticesCount)
+        {
+            int[][] distance = new int[verticesCount][];
+
+            for (int i = 0; i < verticesCount; ++i)
+                for (int j = 0; j < verticesCount; ++j)
+                    distance[i][j] = graph[i][j];
+
+            for (int k = 0; k < verticesCount; ++k)
+            {
+                for (int i = 0; i < verticesCount; ++i)
+                {
+                    for (int j = 0; j < verticesCount; ++j)
+                    {
+                        if (distance[i][k] + distance[k][j] < distance[i][j])
+                            distance[i][j] = distance[i][k] + distance[k][j];
+                    }
+                }
+            }
+
+            return GetShortestDistance(distance);
+        }
+        public static int GetShortestDistance(int[][] dis)
+        {
+            int sDis = Int32.MaxValue;
+            foreach (var d in dis)
+            {
+                foreach (int a in d)
+                {
+                    if (sDis > a)
+                    {
+                        sDis = a;
+                    }
+                }
+            }
+            return sDis;
         }
     }
 }
