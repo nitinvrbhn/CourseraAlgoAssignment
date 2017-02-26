@@ -22,64 +22,51 @@ namespace CourseraAlgoSolution
                     Int32.TryParse(data, out i);
                 }
                 List<int> values = fileContent.Select(t => Convert.ToInt32(t.Split(' '))).ToList();
-                List<int> left = new List<int>(), right = new List<int>();
-                int count = CountSort(values).Item1;
+                
+                int count = Quicksort(values.ToArray(), values[0], values[values.Count -1], values[0]);
                 file.LogMessage("Process ended.." + count);
+                count = Quicksort(values.ToArray(), values[0], values[values.Count - 1], values[values.Count - 1]);
+                file.LogMessage("Process ended.." + count);
+                count = Quicksort(values.ToArray(), values[0], values[values.Count - 1], values[values.Count / 2 - 1]);
+                file.LogMessage("Process ended.." + count);
+
             }
             catch (Exception ex) {
                 file.LogMessage(ex.Message);
             }
         }
-
-        private static Tuple<int, List<int>> CountMerge(List<int> left, List<int> right)
+        public static int Quicksort(int[] arr, int arr1, int arr2, int b)
         {
-            int inv = 0;
-            var result = new List<int>();
-            int i = 0, j = 0;
-
-            while (i < left.Count && j < right.Count)
+            int swapCount = 0;
+            if (arr1 < arr2)
             {
-                if (left[i] < right[j])
+                int v = b;
+                for (int i = arr1 + 1; i < arr2; i++)
                 {
-                    result.Add(left[i]);
-                    i++;
+                    if (arr[i] > arr[arr1])
+                    {
+                        Swap(arr, i, ++v);
+                        swapCount++;
+                    }
                 }
-                else
-                {
-                    result.Add(right[j]);
-                    j++;
-                    inv += left.Count - i;
-                }
+                Swap(arr, arr1, v);
+                swapCount += Quicksort(arr, arr1, v, arr1);
+                swapCount += Quicksort(arr, v + 1, arr2, v + 1);
+                swapCount++;
             }
-
-            // we still have values in one of lists 
-            if (i < left.Count)
-                result.AddRange(left.GetRange(i, left.Count - i));
-            else if (j < right.Count)
-                result.AddRange(right.GetRange(j, right.Count - j));
-
-            return new Tuple<int, List<int>>(inv, result);
+            return swapCount;
         }
-        
-        public static Tuple<int, List<int>> CountSort(List<int> list)
+
+        /**
+         * Swaps the elements of the array
+         * @param array array
+         * @param left index of the first element
+         * @param right index of the second element
+         */
+        private static void Swap(int[] arr, int left, int arr2)
         {
-            if (list.Count <= 1)
-                return new Tuple<int, List<int>>(0, list);
-
-            // divide
-            int middle = list.Count / 2;
-            var leftList = list.GetRange(0, middle);
-            var rightList = list.GetRange(middle, list.Count - leftList.Count);
-
-            // process recursively
-            Tuple<int, List<int>> left = CountSort(leftList);
-            Tuple<int, List<int>> right = CountSort(rightList);
-
-            // merge
-            Tuple<int, List<int>> mergeResult = CountMerge(left.Item2, right.Item2);
-
-            return new Tuple<int, List<int>>(left.Item1 + right.Item1 + mergeResult.Item1,
-                mergeResult.Item2);
+            int tmp = arr[arr2];
+            arr[arr2] = arr[left];
+            arr[left] = tmp;
         }
     }
-}
