@@ -17,9 +17,7 @@ namespace CourseraAlgoSolution
             {
                 fileContent = file.ReadAsArray("quicksort_w2_pq1");
                 file.LogMessage("File read ended..");
-
-                //int[] dataArray = Array.ConvertAll(fileContent, int.Parse);
-
+                
                 int count = QuickSortComparionCount(fileContent.Length);
 
                 file.LogMessage("Process ended..");
